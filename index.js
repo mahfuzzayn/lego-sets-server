@@ -27,7 +27,7 @@ async function run() {
 
         // Toys routes
         app.get("/all-toys", async (req, res) => {
-            const result = await toysCollection.find().toArray();
+            const result = await toysCollection.find().limit(20).toArray();
             res.send(result);
         });
 
@@ -60,8 +60,11 @@ async function run() {
                 const result = await toysCollection
                     .find(emailQuery)
                     .collation({ locale: "en_US", numericOrdering: true })
-                    .sort({ price: 1 })
+                    .sort({ price: -1 })
                     .toArray();
+                res.send(result);
+            } else {
+                const result = await toysCollection.find(emailQuery).toArray();
                 res.send(result);
             }
         });
