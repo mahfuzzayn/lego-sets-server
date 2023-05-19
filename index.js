@@ -29,11 +29,22 @@ async function run() {
         app.get("/all-toys", async (req, res) => {
             const query = req.query;
             if (query?.sub_category) {
-                const subCategoryQuery = { subCategory: query?.sub_category };
-                const result = await toysCollection
-                    .find(subCategoryQuery)
-                    .toArray();
-                res.send(result);
+                const subCategoryQuery = {
+                    subCategory: query?.sub_category,
+                };
+                if (query?.limit) {
+                    const limitQuery = parseInt(query?.limit);
+                    const result = await toysCollection
+                        .find(subCategoryQuery)
+                        .limit(limitQuery)
+                        .toArray();
+                    res.send(result);
+                } else {
+                    const result = await toysCollection
+                        .find(subCategoryQuery)
+                        .toArray();
+                    res.send(result);
+                }
             } else {
                 const result = await toysCollection.find().limit(20).toArray();
                 res.send(result);
