@@ -39,15 +39,18 @@ async function run() {
         });
 
         app.get("/my-toys", async (req, res) => {
-            const query = req.query;
-            if (!query.email) {
-                res.send({
-                    error: "true",
-                    message: "email not found in query",
-                });
-                return;
-            }
-            const result = await toysCollection.find(query).toArray();
+            // const query = req.query;
+            // if (!query.email) {
+            //     res.send({
+            //         error: "true",
+            //         message: "email not found in query",
+            //     });
+            //     return;
+            // }
+            const result = await toysCollection
+                .find()
+                .sort({ price: -1 })
+                .toArray();
             res.send(result);
         });
 
