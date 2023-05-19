@@ -39,19 +39,31 @@ async function run() {
         });
 
         app.get("/my-toys", async (req, res) => {
-            // const query = req.query;
-            // if (!query.email) {
-            //     res.send({
-            //         error: "true",
-            //         message: "email not found in query",
-            //     });
-            //     return;
-            // }
-            const result = await toysCollection
-                .find()
-                .sort({ price: -1 })
-                .toArray();
-            res.send(result);
+            const query = req.query;
+            if (!query.email) {
+                res.send({
+                    error: "true",
+                    message: "email not found in query",
+                });
+                return;
+            }
+            const emailQuery = { email: query?.email };
+            const sortingMethod = req.query?.sort;
+            if (sortingMethod === "ascending") {
+                const result = await toysCollection
+                    .find(emailQuery)
+                    .collation({ locale: "en_US", numericOrdering: true })
+                    .sort({ price: 1 })
+                    .toArray();
+                res.send(result);
+            } else if (sortingMethod === "descending") {
+                const result = await toysCollection
+                    .find(emailQuery)
+                    .collation({ locale: "en_US", numericOrdering: true })
+                    .sort({ price: 1 })
+                    .toArray();
+                res.send(result);
+            }
         });
 
         app.post("/add-a-toy", async (req, res) => {
