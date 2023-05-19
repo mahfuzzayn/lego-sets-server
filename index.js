@@ -27,8 +27,17 @@ async function run() {
 
         // Toys routes
         app.get("/all-toys", async (req, res) => {
-            const result = await toysCollection.find().limit(20).toArray();
-            res.send(result);
+            const query = req.query;
+            if (query?.sub_category) {
+                const subCategoryQuery = { subCategory: query?.sub_category };
+                const result = await toysCollection
+                    .find(subCategoryQuery)
+                    .toArray();
+                res.send(result);
+            } else {
+                const result = await toysCollection.find().limit(20).toArray();
+                res.send(result);
+            }
         });
 
         app.get("/toy/:id", async (req, res) => {
